@@ -1,0 +1,10 @@
+{
+  "name": "Ops",
+  "users": ["user5@example.com"],
+  "repositories": [
+    {
+      "name": "ops-repo",
+      "access": "write"
+    }
+  ]
+}

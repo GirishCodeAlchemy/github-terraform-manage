@@ -1,0 +1,46 @@
+{
+  "teams": [
+    {
+      "name": "Developers",
+      "users": [
+        "user1@example.com",
+        "user2@example.com"
+      ],
+      "repositories": [
+        {
+          "name": "dev-repo",
+          "access": "admin"
+        },
+        {
+          "name": "dev-tools",
+          "access": "write"
+        }
+      ]
+    },
+    {
+      "name": "QA",
+      "users": [
+        "user3@example.com",
+        "user4@example.com"
+      ],
+      "repositories": [
+        {
+          "name": "qa-repo",
+          "access": "read"
+        }
+      ]
+    },
+    {
+      "name": "Ops",
+      "users": [
+        "user5@example.com"
+      ],
+      "repositories": [
+        {
+          "name": "ops-repo",
+          "access": "write"
+        }
+      ]
+    }
+  ]
+}

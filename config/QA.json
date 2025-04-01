@@ -1,0 +1,10 @@
+{
+  "name": "QA",
+  "users": ["user3@example.com", "user4@example.com"],
+  "repositories": [
+    {
+      "name": "qa-repo",
+      "access": "read"
+    }
+  ]
+}
