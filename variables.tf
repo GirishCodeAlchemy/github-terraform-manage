@@ -71,8 +71,6 @@ variable "teams" {
     ])
   }
 
-
-
   # Validation for team members
   validation {
     condition = alltrue([

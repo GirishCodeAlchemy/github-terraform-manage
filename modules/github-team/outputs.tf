@@ -44,7 +44,6 @@ output "team_urls" {
   }
 }
 
-
 output "repository_info" {
   description = "Information about the GitHub repositories and their team access"
   value = {
