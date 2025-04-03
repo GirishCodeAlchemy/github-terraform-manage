@@ -13,8 +13,8 @@ resource "github_team_membership" "team_members" {
       for team_index, team in var.teams : [
         for user in team.users.members : {
           team_index = team_index
-          user      = user
-          role      = "member"
+          user       = user
+          role       = "member"
         }
       ]
     ]) : "${membership.team_index}-${membership.user}" => membership
@@ -32,8 +32,8 @@ resource "github_team_membership" "team_maintainers" {
       for team_index, team in var.teams : [
         for user in team.users.maintainer : {
           team_index = team_index
-          user      = user
-          role      = "maintainer"
+          user       = user
+          role       = "maintainer"
         }
       ]
     ]) : "${membership.team_index}-${membership.user}" => membership
@@ -50,8 +50,8 @@ resource "github_team_repository" "team_repository" {
       for team_index, team in var.teams : [
         for repository in team.repositories : {
           team_index = team_index
-          repo_name = repository.name
-          access    = repository.access
+          repo_name  = repository.name
+          access     = repository.access
         }
       ]
     ]) : "${repo.team_index}-${repo.repo_name}" => repo

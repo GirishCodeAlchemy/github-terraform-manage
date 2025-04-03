@@ -4,7 +4,7 @@ data "github_repository" "check_repos" {
       for repository in team.repositories : repository.name
     ]
   ])))
-  
+
   name = each.key
 
   lifecycle {

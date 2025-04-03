@@ -52,13 +52,13 @@ output "repository_info" {
       for team in var.teams : [
         for repository in team.repositories : repository.name
       ]
-    ])) : repo => {
+      ])) : repo => {
       name = repo
       team_access = [
         for team_index, team in var.teams : {
           team_name  = team.name
           repository = repo
-          access     = try(
+          access = try(
             [
               for r in team.repositories : r.access
               if r.name == repo
@@ -79,9 +79,9 @@ output "team_info" {
   description = "Information about the created GitHub teams"
   value = {
     for idx, team in var.teams : team.name => {
-      id         = github_team.team[idx].id
-      slug       = github_team.team[idx].slug
-      members    = team.users.members
+      id          = github_team.team[idx].id
+      slug        = github_team.team[idx].slug
+      members     = team.users.members
       maintainers = team.users.maintainer
       repositories = [
         for repo in team.repositories : {

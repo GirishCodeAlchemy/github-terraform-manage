@@ -5,59 +5,56 @@ This project provides a structured approach to manage GitHub teams and repositor
 ## Project Structure
 
 ```
-terragrunt-terraform-github
+github-terraform-manage
 ├── config
 │   ├── Developers.json      # Configuration for the Developers team
 │   ├── QA.json              # Configuration for the QA team
 │   └── Ops.json             # Configuration for the Ops team
 ├── modules
-│   ├── github-team          # Module to manage GitHub teams
-│   │   ├── main.tf          # Terraform configuration for GitHub team
+│   ├── github-team          # Module to manage GitHub teams and repository
+│   │   ├── main.tf          # Team creation and membership resources
+│   │   ├── data.tf          # Data sources for team configuration
 │   │   ├── variables.tf     # Input variables for GitHub team module
 │   │   └── outputs.tf       # Outputs for GitHub team module
-│   ├── github-repository    # Module to manage GitHub repositories
-│   │   ├── main.tf          # Terraform configuration for GitHub repository
-│   │   ├── variables.tf     # Input variables for GitHub repository module
-│   │   └── outputs.tf       # Outputs for GitHub repository module
+├── env.hcl                  # Environment-specific Terragrunt settings
+├── global.hcl               # Global Terragrunt configuration
 ├── terragrunt.hcl           # Root Terragrunt configuration
-├── main.tf                  # Entry point for Terraform configuration
-├── variables.tf             # Input variables for the main configuration
-├── outputs.tf               # Outputs summarizing the applied resources
-├── README.md                # Project documentation
-└── LICENSE                  # License file for the project
+├── provider.tf              # GitHub provider configuration with authentication settings
+├── variables.tf             # Root module input variables for global configuration
+└── README.md                # Project documentation and setup instructions
 ```
 
 - **config/**: Contains separate JSON files for each team, defining their users and associated repositories
-
   - **Developers.json**: JSON file defining the `Developers` team, its users, and associated repositories.
   - **QA.json**: JSON file defining the `QA` team, its users, and associated repositories.
   - **Ops.json**: JSON file defining the `Ops` team, its users, and associated repositories.
 
-- **modules/**: Contains Terraform modules for managing GitHub resources.
+- **modules/**: Contains reusable Terraform modules for managing GitHub resources
+  - **github-team/**: Module for managing GitHub teams and their configurations
+    - **main.tf**: Defines resources for team creation, user membership, and repository access
+    - **data.tf**: Data sources for fetching existing repository and user information
+    - **variables.tf**: Input variables for configuring team settings and permissions
+    - **outputs.tf**: Output values for team IDs, member lists, and repository access
 
-  - **github-team/**: Handles the creation of GitHub teams and their memberships.
+- **env.hcl**: Environment variables for configuring the github provider.
 
-    - **main.tf**: Defines resources for team creation and user membership.
-    - **variables.tf**: Input variables for the team module.
-    - **outputs.tf**: Outputs for the team module.
-
-  - **github-repository/**: Manages the creation of GitHub repositories and team access.
-
-    - **main.tf**: Defines resources for repository creation and team access.
-    - **variables.tf**: Input variables for the repository module.
-    - **outputs.tf**: Outputs for the repository module.
+- **global.hcl**: Global Terragrunt settings shared across all environments
 
 - **terragrunt.hcl**: Configuration file for Terragrunt, dynamically loading team configurations and managing module dependencies.
 
-- **main.tf**: Entry point for Terraform configuration, invoking the modules for teams and repositories.
+- **provider.tf**: Configures the GitHub provider with Authentication tokens and Organization settings
 
-- **variables.tf**: Defines input variables for the main configuration.
-
-- **outputs.tf**: Outputs summarizing the results of the applied resources, including team and repository details.
+- **variables.tf**: Root level variables for:
+  - GitHub organization name
+  - Default team settings
+  - Global permission configurations
 
 ## Setup Instructions
 
 1. **Prerequisites**: Ensure you have Terraform and Terragrunt installed on your machine.
+  - Terraform >= 1.0
+  - GitHub Account with administrative access
+  - GitHub Personal Access Token with appropriate permissions
 
 2. **Configuration**:
 
@@ -79,6 +76,21 @@ terragrunt-terraform-github
 ## Usage
 
 - Modify the JSON files in the config/ folder to add or update teams, users, and repositories.
+    ```json
+    {
+      "name": "Developers",
+      "users": {
+        "members": ["user1","user2"],
+        "maintainer": ["user3"]
+      },
+      "repositories": [
+        {
+          "name": "repository-name",
+          "access": "admin|write|read"
+        }
+      ]
+    }
+    ```
 - Use the Terragrunt commands to manage the lifecycle of your GitHub resources:
   - terragrunt plan: Preview the changes to be applied.
   - terragrunt apply: Apply the changes to create or update resources.
@@ -92,54 +104,3 @@ After applying the configuration, the following outputs will be available:
   - Team names, IDs, and the list of users in each team.
 - Repository Information:
   - Repository names, visibility (e.g., private or public), and the teams with their access levels.
-
-Example output:
-
-```json
-{
-  "team_info": {
-    "Developers": {
-      "id": "12345678",
-      "name": "Developers",
-      "users": ["user1@example.com", "user2@example.com"]
-    },
-    "QA": {
-      "id": "87654321",
-      "name": "QA",
-      "users": ["user3@example.com", "user4@example.com"]
-    }
-  },
-  "repository_info": {
-    "dev-repo": {
-      "name": "dev-repo",
-      "visibility": "private",
-      "team_access": [
-        {
-          "team_name": "Developers",
-          "repository": "dev-repo",
-          "access": "admin"
-        }
-      ]
-    },
-    "qa-repo": {
-      "name": "qa-repo",
-      "visibility": "private",
-      "team_access": [
-        {
-          "team_name": "QA",
-          "repository": "qa-repo",
-          "access": "read"
-        }
-      ]
-    }
-  }
-}
-```
-
-## Contributing
-
-Contributions are welcome! Please submit a pull request or open an issue for any enhancements or bug fixes.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
