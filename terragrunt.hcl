@@ -1,18 +1,17 @@
 locals {
-  team_files = fileset("${path_relative_to_include()}/config", "*.json")
-  teams      = [for file in local.team_files : jsondecode(file("${path_relative_to_include()}/config/${file}"))]
-}
+  global_vars       = read_terragrunt_config("${get_terragrunt_dir()}/global.hcl")
+  environment_vars  = read_terragrunt_config("${get_terragrunt_dir()}/env.hcl")
 
-dependency "github_team" {
-  config_path = "${path_relative_to_include()}/modules/github-team"
-}
-
-dependency "github_repository" {
-  config_path = "${path_relative_to_include()}/modules/github-repository"
+  team_files = fileset("${get_terragrunt_dir()}/config/", "*.json")
+  teams      = [for file in local.team_files : jsondecode(file("${get_terragrunt_dir()}/config/${file}"))]
 }
 
 inputs = {
   teams = local.teams
-  github_token       = "your_personal_access_token"
-  github_organization = "your_organization_name"
+  github_token       = local.environment_vars.locals.github_token
+  github_organization = local.global_vars.locals.github_organization
+}
+
+terraform {
+  source = "./modules/github-team"
 }
